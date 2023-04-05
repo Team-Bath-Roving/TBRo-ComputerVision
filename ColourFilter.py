@@ -27,8 +27,6 @@ bLow = 40
 # remember that openCV deals in BGR instead of RGB
 # -------------------------
 
-# image filter function, checks each pixel and compares it to a predetermined range of BGR values
-# if the value of the pixel falls between the range, then its replaced by black
 def frameFilter(frame, rHigh, gHigh, bHigh, rLow, gLow, bLow):
     (rows, cols, layers) = frame.shape
     frameFiltered = np.zeros((rows, cols, layers), dtype=np.ubyte)
@@ -38,6 +36,15 @@ def frameFilter(frame, rHigh, gHigh, bHigh, rLow, gLow, bLow):
             if rHigh >= frame[i, j, 2] >= rLow and gHigh >= frame[i, j, 1] >= gLow and bHigh >= frame[i, j, 0] >= bLow:
                 frameFiltered[i, j, (0, 1, 2)] = (0, 0, 0)
     return frameFiltered
+    # image filter function, checks each pixel and compares it to a predetermined range of BGR values
+    # if the value of the pixel falls between the range, then its replaced by black
+
+def mask(frame, rHigh, gHigh, bHigh, rLow, gLow, bLow):
+    frameMask = cv2.inRange(frame, (bLow, gLow, rLow), (bHigh, gHigh, rHigh))
+    frameMasked = cv2.bitwise_and(frameMask, frameMask)
+    return frameMasked
+    # creates a mask where white = sand, black = object
+    # for future use with depth cam
 
 def displayFrame(frame, name):
     cv2.namedWindow(name, cv2.WINDOW_KEEPRATIO)
@@ -66,7 +73,7 @@ cv2.destroyAllWindows()
 
 # integrate use of depth camera
 # -------------------------
-# can code a mask to use with the depth camera, so that the script can find the distance to all objects detected
+# use mask with depth camera, so that the script can find the distance to all objects detected
 # use that to output depth map of only objects, ignoring sand and other background objects
 # could use to throw up warnings if distance <= specified distance
 # -------------------------
