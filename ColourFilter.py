@@ -64,6 +64,7 @@ cv2.destroyAllWindows()
 # config to work with video frames
 
 # tune BGR values to work with the rover camera
+# test using HSV values instead of BGR for detection - may require less fine tuning?
 
 # add function to detect payload
 # -------------------------
